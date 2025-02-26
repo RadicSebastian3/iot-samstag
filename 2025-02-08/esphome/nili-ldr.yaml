@@ -125,6 +125,37 @@ sensor:
       name: ${name}_Humidity
       id: humidity
 
+  # TSL2561 Light Sensor
+  - platform: tsl2561
+    name: ${name}_TSL2561_Illuminance
+    id: tsl2561_illuminance
+    i2c_id: bus_a
+    address: 0x39
+    update_interval: 10s
+    integration_time: 402ms
+    gain: 16x
+    on_value:
+      then:
+        - logger.log:
+            format: "TSL2561 illuminance changed, value %.1f lux"
+            args: [ 'id(tsl2561_illuminance).state' ]
+
+  # MAX4466 Sound Level Sensor
+  - platform: adc
+    pin: GPIO33
+    name: ${name}_Sound_Level
+    id: sound_level
+    update_interval: 1s
+    accuracy_decimals: 2
+    unit_of_measurement: "dB"
+    filters:
+      - sliding_window_moving_average:
+          window_size: 10
+          send_every: 5
+      - lambda: |-
+          // Simple conversion to approximate dB (needs calibration for accuracy)
+          return 20.0f * log10f(x * 10.0f);
+
   - platform: adc
     pin: GPIO32
     name: ${name}_Illuminance
