@@ -65,10 +65,21 @@ button:
     name: Factory reset
 
 i2c:
-  sda: 21
-  scl: 22
-  # scan: true
-  id: bus_a
+  - id: bus_a
+    sda: 21
+    scl: 22
+    #scan: true
+
+  - id: bus_b
+    sda: 18
+    scl: 19
+    #scan: true
+
+
+
+
+
+
 
 uart:
   rx_pin: GPIO13
@@ -129,7 +140,7 @@ sensor:
   - platform: tsl2561
     name: ${name}_TSL2561_Illuminance
     id: tsl2561_illuminance
-    i2c_id: bus_a
+    i2c_id: bus_b
     address: 0x39
     update_interval: 10s
     integration_time: 402ms
